@@ -14,7 +14,7 @@ class LinkedinScrape(scrapy.Spider):
 
     def __init__(self):
         self.driver = webdriver.Chrome()
-        self.driver.maximize_window()
+        # self.driver.maximize_window()
 
     """
     Sample full url :
@@ -48,12 +48,12 @@ class LinkedinScrape(scrapy.Spider):
     def start_requests(self):
         with open(self.SOURCE_FILE, 'r') as f:
             data = json.load(f)
-        for row in data[:1]:
+        for row in data:
             jobs = row["Jobs"]
             if len(jobs) < 1:
                 continue
-            for job in jobs[:1]:
-                for location in self.LOCATIONS[1:20]:
+            for job in jobs:
+                for location in self.LOCATIONS:
                     url = self.url + urlencode(self.buid_query_params(job, location, 0))
                     yield scrapy.Request(url=url, callback=self.parse, cb_kwargs=dict(q_location=location))
 
@@ -67,6 +67,9 @@ class LinkedinScrape(scrapy.Spider):
 
             if q_location not in location:
                 continue
+
+            print("Q Location : ", q_location)
+            print("Location : ", location)
 
             self.driver.get(company_link)
             while("authwall" in self.driver.current_url):
