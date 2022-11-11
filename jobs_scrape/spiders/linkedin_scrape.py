@@ -14,7 +14,6 @@ class LinkedinScrape(scrapy.Spider):
 
     def __init__(self):
         self.driver = webdriver.Chrome()
-        # self.driver.maximize_window()
 
     """
     Sample full url :
@@ -27,6 +26,8 @@ class LinkedinScrape(scrapy.Spider):
     start=25"""
 
     url = "https://www.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search?"
+    url_feed = "https://www.linkedin.com/feed/"
+    url_directory = "https://www.linkedin.com/directory/companies"
     LOCATIONS = [
         "Andhra Pradesh","Arunachal Pradesh","Assam","Bihar","Chhattisgarh",
         "Goa","Gujarat","Haryana","Himachal Pradesh","Jammu and Kashmir",
@@ -73,6 +74,8 @@ class LinkedinScrape(scrapy.Spider):
 
             self.driver.get(company_link)
             while("authwall" in self.driver.current_url):
+                time.sleep(2)
+                self.driver.get(self.url_feed)
                 print("%"*80)
                 print("Diff url encountered")
                 print("Driver url : ", self.driver.current_url)
